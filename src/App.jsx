@@ -6,6 +6,7 @@
 import React from 'react';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
+import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Dashboard from './pages/Dashboard';
@@ -14,6 +15,7 @@ import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import HomePage from './pages/HomePage';
 import ProfilePage from './pages/ProfilePage';
+import InterviewPage from './pages/InterviewPage';
 import RecentPerformancePage from './pages/RecentPerformancePage';
 import AnswerBoxPage from './pages/AnswerBoxPage';
 import SystemDesignPage from './pages/SystemDesignPage';
@@ -36,8 +38,9 @@ const App = () => {
   const showLayout = !hideLayoutRoutes.includes(location.pathname);
 
   return (
-    // Global layout wrapper for screen height and flex column structure
-    <div className="min-h-screen flex flex-col">
+    <AuthProvider>
+      {/* Global layout wrapper for screen height and flex column structure */}
+      <div className="min-h-screen flex flex-col">
       {showLayout && <Navbar />}
       {/* Main content wrapper pushes the footer to the bottom */}
       <div className="flex-1">
@@ -52,6 +55,7 @@ const App = () => {
             <Route path="/home" element={<HomePage />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/interview" element={<InterviewPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/performance" element={<RecentPerformancePage />} />
             <Route path="/answer-box" element={<AnswerBoxPage />} />
@@ -70,7 +74,8 @@ const App = () => {
         </AnimatePresence>
       </div>
       {showLayout && <Footer />}
-    </div>
+      </div>
+    </AuthProvider>
   );
 };
 

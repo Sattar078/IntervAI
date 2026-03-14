@@ -119,14 +119,14 @@ const HomePage = () => {
           <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Recommended Resources</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
              <a href="#" className="flex items-center gap-5 bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all hover:-translate-y-1">
-               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 text-blue-600 flex items-center justify-center rounded-2xl text-2xl flex-shrink-0">📘</div>
+               <div className="w-16 h-16 bg-blue-100 dark:bg-blue-900/50 text-blue-600 flex items-center justify-center rounded-2xl text-2xl shrink-0">📘</div>
                <div>
                  <h4 className="font-bold text-slate-800 dark:text-white text-lg">Top 50 React Questions</h4>
                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Master the most common React interview questions.</p>
                </div>
              </a>
              <a href="#" className="flex items-center gap-5 bg-white dark:bg-slate-800 p-5 rounded-3xl border border-slate-200 dark:border-slate-700 hover:shadow-md transition-all hover:-translate-y-1">
-               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 flex items-center justify-center rounded-2xl text-2xl flex-shrink-0">⭐</div>
+               <div className="w-16 h-16 bg-emerald-100 dark:bg-emerald-900/50 text-emerald-600 flex items-center justify-center rounded-2xl text-2xl shrink-0">⭐</div>
                <div>
                  <h4 className="font-bold text-slate-800 dark:text-white text-lg">The STAR Method Guide</h4>
                  <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">Learn how to answer behavioral questions perfectly.</p>

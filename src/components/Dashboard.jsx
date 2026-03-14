@@ -237,7 +237,7 @@ const Dashboard = () => {
               {/* LEFT COLUMN: Question & Answer */}
               <div className="lg:col-span-2 space-y-6">
                 {/* Question Card */}
-                <div className="bg-gradient-to-br from-blue-600 to-indigo-800 rounded-3xl p-8 md:p-10 shadow-lg text-white relative overflow-hidden">
+                <div className="bg-linear-to-br from-blue-600 to-indigo-800 rounded-3xl p-8 md:p-10 shadow-lg text-white relative overflow-hidden">
                   <div className="absolute top-0 right-0 -mt-4 -mr-4 w-32 h-32 bg-white opacity-10 rounded-full blur-2xl"></div>
                   <div className="absolute bottom-0 left-0 -mb-4 -ml-4 w-24 h-24 bg-black opacity-10 rounded-full blur-xl"></div>
                   
@@ -348,12 +348,12 @@ const Dashboard = () => {
                       </button>
                     </div>
                   ) : (
-                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-800 h-full min-h-[400px] flex flex-col items-center justify-center text-center opacity-70">
+                    <div className="bg-white dark:bg-slate-900 rounded-3xl p-8 shadow-sm border border-slate-200 dark:border-slate-800 h-full min-h-100 flex flex-col items-center justify-center text-center opacity-70">
                       <div className="w-20 h-20 mb-6 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center">
                         <span className="text-4xl">🤖</span>
                       </div>
                       <h3 className="text-slate-600 dark:text-slate-300 font-bold uppercase tracking-wider mb-2">Awaiting Response</h3>
-                      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-[200px]">Submit your answer to receive instant AI feedback and scoring.</p>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 max-w-50">Submit your answer to receive instant AI feedback and scoring.</p>
                     </div>
                   )}
                 </div>

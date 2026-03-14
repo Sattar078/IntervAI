@@ -7,6 +7,7 @@ import interviewRoutes from "./routes/interview.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { supabase } from "./config/supabase.js";
 
+// Initialize Express application and configure middleware
 const app = express();
 
 // Middleware

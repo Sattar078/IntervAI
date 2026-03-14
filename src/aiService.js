@@ -4,12 +4,8 @@
  * Contains all prompt engineering and response parsing logic for the application.
  */
 
-// Retrieve the API Key from the Vite environment variables (.env file). 
-// The 'VITE_' prefix is required by Vite to expose it to the browser.
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
-
-// Construct the complete endpoint URL for the Gemini Pro model using the API key.
-const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
+// Define the URL for your local Express backend
+const BACKEND_URL = 'http://localhost:5000/api/interviews';
 
 /**
  * A helper function to make API calls to Gemini.
@@ -20,7 +16,7 @@ const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-
 const callGeminiAPI = async (prompt) => {
   try {
     // Perform a standard POST request to the Google API endpoint
-    const response = await fetch(API_URL, {
+    const response = await fetch(BACKEND_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

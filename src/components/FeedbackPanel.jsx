@@ -13,7 +13,7 @@ const FeedbackPanel = ({ feedback, onNext }) => {
     <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-sm p-6 md:p-10 border border-gray-200 dark:border-slate-700">
       <div className="flex flex-col md:flex-row gap-8 items-start mb-8">
         
-        <div className="flex-shrink-0 flex flex-col items-center mx-auto md:mx-0">
+        <div className="shrink-0 flex flex-col items-center mx-auto md:mx-0">
           <div className={`w-32 h-32 rounded-full flex items-center justify-center border-8 ${getScoreColor(feedback.score)}`}>
             <span className="text-4xl font-extrabold">{feedback.score}</span>
           </div>

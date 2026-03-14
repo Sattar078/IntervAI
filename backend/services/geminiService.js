@@ -1,35 +1,44 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-// Debug log to verify the key is loaded
-console.log("Gemini API Key Loaded:", process.env.GEMINI_API_KEY ? "Yes ✅" : "No ❌");
+let genAI = null;
 
-// Initialize the client using the key from the environment
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// Initialize the client right before the request to ensure process.env is loaded
+function getAIClient() {
+  if (!genAI) {
+    if (!process.env.GEMINI_API_KEY) {
+      console.error("[Gemini Debug] API Key Loaded: No ❌");
+      throw new Error("GEMINI_API_KEY is missing in backend .env file.");
+    }
+    console.log("[Gemini Debug] API Key Loaded: Yes ✅");
+    genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+  }
+  return genAI;
+}
 
 export async function generateInterviewQuestion(role, difficulty) {
   try {
-    if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is missing in backend.");
-    console.log(`[Gemini] Sending request to generate question for role: ${role} | difficulty: ${difficulty}`);
+    const ai = getAIClient();
+    console.log(`[Gemini Debug] Sending request to generate question for role: ${role} | difficulty: ${difficulty}`);
     
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = ai.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     const prompt = `You are a senior technical interviewer. Generate one technical interview question for a ${role} developer with ${difficulty} difficulty.\n\nReturn only the question text.`;
     
     const result = await model.generateContent(prompt);
-    console.log("[Gemini] Successfully generated question.");
+    console.log("[Gemini Debug] Successfully generated question.");
     return result.response.text().trim();
   } catch (error) {
-    console.error("[Gemini] Error generating question:", error.message || error);
+    console.error("[Gemini Debug] Error generating question:", error.message || error);
     throw error;
   }
 }
 
 export async function evaluateAnswer(question, answer) {
   try {
-    if (!process.env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY is missing in backend.");
-    console.log("[Gemini] Sending request to evaluate answer...");
+    const ai = getAIClient();
+    console.log("[Gemini Debug] Sending request to evaluate answer...");
     
-    const model = genAI.getGenerativeModel({
+    const model = ai.getGenerativeModel({
       model: "gemini-1.5-flash",
       // Enforcing JSON output structure natively if supported
       generationConfig: { responseMimeType: "application/json" }
@@ -52,10 +61,10 @@ export async function evaluateAnswer(question, answer) {
     const result = await model.generateContent(prompt);
     let responseText = result.response.text().trim();
     
-    console.log("[Gemini] Successfully evaluated answer.");
+    console.log("[Gemini Debug] Successfully evaluated answer.");
     return JSON.parse(responseText);
   } catch (error) {
-    console.error("[Gemini] Error evaluating answer:", error.message || error);
+    console.error("[Gemini Debug] Error evaluating answer:", error.message || error);
     throw error;
   }
 }

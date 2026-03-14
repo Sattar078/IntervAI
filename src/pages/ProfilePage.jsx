@@ -3,21 +3,36 @@
  * Allows users to edit personal details, view overarching stat blocks, 
  * upload a custom avatar, and configure account preferences.
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const ProfilePage = () => {
   const navigate = useNavigate();
+  const { user, updateProfile, logout } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [profileDetails, setProfileDetails] = useState({
-    name: 'John Doe',
-    role: 'Software Engineer',
-    email: 'john.doe@example.com',
+    name: '',
+    role: '',
+    email: '',
     profilePic: null
   });
 
+  // Initialize profileDetails from user context
+  useEffect(() => {
+    if (user) {
+      setProfileDetails({
+        name: user.name || '',
+        role: user.role || '',
+        email: user.email || '',
+        profilePic: user.profilePic || null
+      });
+    }
+  }, [user]);
+
   const handleLogout = () => {
-    // Placeholder for real authentication sign-out logic
+    // Call logout from auth context
+    logout();
     navigate('/login');
   };
 
@@ -33,15 +48,13 @@ const ProfilePage = () => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (evt) => {
-        const newPic = evt.target.result;
-        setProfileDetails(prev => ({ ...prev, profilePic: newPic }));
-        // If the user uploads an image, immediately save it to Auth context
-        updateProfile({ profilePic: newPic });
+        setProfileDetails(prev => ({ ...prev, profilePic: evt.target.result }));
       };
       reader.readAsDataURL(file);
     }
   };
 
+  // Save profile changes to auth context
   const handleSaveProfile = () => {
     updateProfile(profileDetails);
     setIsEditing(false);
@@ -79,7 +92,7 @@ const ProfilePage = () => {
               )}
               <button onClick={() => setIsEditing(!isEditing)} className={`w-full py-3 font-bold rounded-xl transition-colors text-sm shadow-inner ${isEditing ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300'}`}>
                 {isEditing ? 'Save Profile' : 'Edit Profile'}
-              </button>
+              </button>isEditing ? handleSaveProfile() : setIsEditing(true
             </div>
 
             <div className="bg-white dark:bg-slate-900 rounded-3xl p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
