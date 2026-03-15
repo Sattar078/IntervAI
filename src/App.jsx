@@ -6,7 +6,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
-import { AnimatePresence } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -37,6 +37,18 @@ const App = () => {
   // Install Prompt State
   const [deferredPrompt, setDeferredPrompt] = useState(null);
   const [showInstallPrompt, setShowInstallPrompt] = useState(false);
+
+  // Splash Screen State (Only show on mobile screens initially)
+  const [showSplash, setShowSplash] = useState(() => window.innerWidth < 768);
+
+  useEffect(() => {
+    if (showSplash) {
+      const splashTimer = setTimeout(() => {
+        setShowSplash(false);
+      }, 5000); // 5 seconds
+      return () => clearTimeout(splashTimer);
+    }
+  }, [showSplash]);
 
   // Service Worker Registration & PWA Updates
   const {
@@ -88,6 +100,38 @@ const App = () => {
 
   return (
     <AuthProvider>
+      {/* Mobile Splash Screen Overlay */}
+      <AnimatePresence>
+        {showSplash && (
+          <motion.div
+            key="splash-screen"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, scale: 1.05 }}
+            transition={{ duration: 0.6, ease: "easeInOut" }}
+            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-blue-900/60 backdrop-blur-2xl md:hidden"
+          >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.8, type: "spring", bounce: 0.5 }}
+              className="flex flex-col items-center"
+            >
+              <div className="w-24 h-24 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl flex items-center justify-center text-white font-extrabold text-5xl shadow-2xl mb-6 ring-4 ring-white/20">
+                AI
+              </div>
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6, duration: 0.6 }}
+                className="text-4xl font-extrabold text-white tracking-tight drop-shadow-lg"
+              >
+                AIInterview
+              </motion.h1>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* Global layout wrapper for screen height and flex column structure */}
       <div className="min-h-screen flex flex-col">
       
