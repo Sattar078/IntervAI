@@ -1,61 +1,43 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
-import tailwindcss from '@tailwindcss/vite'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
+import tailwindcss from "@tailwindcss/vite";
 
-const pwaConfig = {
-    registerType: 'autoUpdate',
-    includeAssets: ['favicon.ico', 'logo.png', 'mask-icon.svg'],
-    devOptions: {
-      enabled: true,
-    },
-    manifest: {
-      name: 'IntervAI',
-      short_name: 'IntervAI',
-      description: 'AI-powered interview preparation platform',
-      theme_color: '#4F46E5',
-      background_color: '#FFFFFF',
-      display: 'standalone',
-      icons: [
-        {
-          src: 'public/logo.png',
-          sizes: '192x192',
-          type: 'image/png'
-        },
-        {
-          src: 'public/logo.png',
-          sizes: '512x512',
-          type: 'image/png',
-          purpose: 'any maskable'
-        }
-      ]
-    },
-    workbox: {
-      globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
-      runtimeCaching: [
-        {
-          urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
-          handler: 'CacheFirst',
-          options: {
-            cacheName: 'google-fonts-cache',
-            expiration: {
-              maxEntries: 10,
-              maxAgeSeconds: 60 * 60 * 24 * 365 // 1 year
-            },
-            cacheableResponse: {
-              statuses: [0, 200]
-            }
-          }
-        }
-      ]
-    }
-};
+// https://vitejs.dev/config/
 
-// https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(), 
     tailwindcss(),
-    VitePWA(pwaConfig)
-  ],
-}) 
+    react(),
+    VitePWA({
+      registerType: "prompt",
+      devOptions: {
+        enabled: true
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,ico,png,svg}']
+      },
+      manifest: {
+        name: "AI Interview Platform",
+        short_name: "AIInterview",
+        description: "AI powered mock interview platform",
+        theme_color: "#000000",
+        background_color: "#ffffff",
+        display: "standalone",
+        start_url: "/",
+        icons: [
+          {
+            src: "/icon-192.png",
+            sizes: "192x192",
+            type: "image/png"
+          },
+          {
+            src: "/icon-192.png",
+            sizes: "512x512",
+            type: "image/png"
+          }
+        ]
+      }
+    })
+  ]
+});

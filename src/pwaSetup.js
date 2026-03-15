@@ -1,5 +1,3 @@
-import { setupPWA } from './pwaSetup';
-setupPWA();
 import { registerSW } from 'virtual:pwa-register';
 
 /**
@@ -9,15 +7,10 @@ import { registerSW } from 'virtual:pwa-register';
  */
 export function setupPWA() {
   if ('serviceWorker' in navigator) {
-    const updateSW = registerSW({
-      onNeedRefresh() {
-        // You can replace this with a custom toast/modal in your React UI later
-        if (confirm('New content is available for IntervAI. Reload to update?')) {
-          updateSW(true);
-        }
-      },
+    registerSW({
+      immediate: true,
       onOfflineReady() {
-        console.log('IntervAI is ready to work offline.');
+        console.log('AI Interview Platform is ready to work offline.');
       },
     });
   } else {
