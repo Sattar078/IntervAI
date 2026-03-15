@@ -4,7 +4,7 @@
  * Wraps the application in global layout components and manages page transitions.
  */
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Link } from 'react-router-dom';
 import { useRegisterSW } from 'virtual:pwa-register/react';
 import { AnimatePresence } from 'framer-motion';
 import { AuthProvider } from './context/AuthContext';
@@ -90,7 +90,29 @@ const App = () => {
     <AuthProvider>
       {/* Global layout wrapper for screen height and flex column structure */}
       <div className="min-h-screen flex flex-col">
-      {showLayout && <Navbar />}
+      
+      {/* Desktop Navbar */}
+      {showLayout && <div className="hidden md:block"><Navbar /></div>}
+
+      {/* Mobile Top Navbar (PWA) */}
+      {showLayout && (
+        <div className="md:hidden sticky top-0 z-50 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between shadow-sm">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+              AI
+            </div>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">AIInterview</span>
+          </Link>
+          {deferredPrompt && (
+            <button
+              onClick={handleInstallClick}
+              className="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold px-3 py-1.5 rounded shadow-sm transition-colors"
+            >
+              Install
+            </button>
+          )}
+        </div>
+      )}
       
       {/* Custom PWA Install Modal */}
       {showInstallPrompt && (
@@ -140,7 +162,7 @@ const App = () => {
       )}
 
       {/* Main content wrapper pushes the footer to the bottom */}
-      <div className="flex-1">
+      <div className="flex-1 pb-16 md:pb-0">
         {/* AnimatePresence enables Framer Motion exit/enter animations */}
         <AnimatePresence mode="wait">
           <Routes location={location} key={location.pathname}>
@@ -169,8 +191,47 @@ const App = () => {
             <Route path="/terms" element={<TermsOfServicePage />} />
           </Routes>
         </AnimatePresence>
+
+        {/* Desktop Floating Install Button */}
+        {deferredPrompt && showLayout && (
+          <div className="hidden md:block fixed bottom-8 right-8 z-[100]">
+            <button
+              onClick={handleInstallClick}
+              className="flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-3 rounded-full shadow-2xl font-bold transition-transform hover:-translate-y-1"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Install App
+            </button>
+          </div>
+        )}
       </div>
-      {showLayout && <Footer />}
+      
+      {/* Desktop Footer */}
+      {showLayout && <div className="hidden md:block"><Footer /></div>}
+
+      {/* Mobile Bottom Navigation (PWA) */}
+      {showLayout && (
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-white border-t border-gray-200 flex justify-around items-center h-16 pb-safe shadow-[0_-2px_10px_rgba(0,0,0,0.05)]">
+          <Link to="/home" className={`flex flex-col items-center justify-center w-full h-full ${location.pathname === '/home' ? 'text-indigo-600' : 'text-gray-500 hover:text-indigo-500'}`}>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+            </svg>
+            <span className="text-[10px] mt-1 font-medium">Home</span>
+          </Link>
+          <Link to="/interview" className={`flex flex-col items-center justify-center w-full h-full ${location.pathname === '/interview' ? 'text-indigo-600' : 'text-gray-500 hover:text-indigo-500'}`}>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
+            </svg>
+            <span className="text-[10px] mt-1 font-medium">Interview</span>
+          </Link>
+          <Link to="/profile" className={`flex flex-col items-center justify-center w-full h-full ${location.pathname === '/profile' ? 'text-indigo-600' : 'text-gray-500 hover:text-indigo-500'}`}>
+            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+            </svg>
+            <span className="text-[10px] mt-1 font-medium">Profile</span>
+          </Link>
+        </div>
+      )}
       </div>
     </AuthProvider>
   );
