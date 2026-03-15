@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import InterviewComponent from '../components/InterviewComponent';
+import { generateResumeQuiz } from '../services/interviewService';
 
 const InterviewPage = () => {
   const [searchParams] = useSearchParams();
@@ -23,6 +24,12 @@ const InterviewPage = () => {
     bestScore: 0,
     history: []
   });
+  
+  const [uploading, setUploading] = useState(false);
+  const [quizMode, setQuizMode] = useState(false);
+  const [quizQuestions, setQuizQuestions] = useState([]);
+  const [currentQuizIndex, setCurrentQuizIndex] = useState(0);
+  const [quizScore, setQuizScore] = useState(0);
 
   const handleStartInterview = (newDifficulty) => {
     setDifficulty(newDifficulty);
@@ -53,6 +60,23 @@ const InterviewPage = () => {
     });
   };
 
+  const handleResumeUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    setUploading(true);
+    try {
+      const questions = await generateResumeQuiz(file, user?.uid || 'anonymous');
+      setQuizQuestions(questions);
+      setQuizMode(true);
+      setShowSettings(false);
+    } catch (error) {
+      alert("Failed to generate quiz from resume.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex items-center justify-center px-4">
@@ -65,6 +89,50 @@ const InterviewPage = () => {
           >
             Go to Login
           </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (quizMode) {
+    if (currentQuizIndex >= quizQuestions.length) {
+      return (
+        <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-4">
+          <h2 className="text-4xl font-bold mb-4">Quiz Completed!</h2>
+          <p className="text-2xl mb-8">Your Score: {quizScore} / {quizQuestions.length}</p>
+          <button onClick={() => {
+            setQuizMode(false);
+            setShowSettings(true);
+            setQuizScore(0);
+            setCurrentQuizIndex(0);
+            setQuizQuestions([]);
+          }} className="px-6 py-3 bg-blue-500 hover:bg-blue-600 rounded-lg transition-colors font-semibold">
+            Back to Dashboard
+          </button>
+        </div>
+      );
+    }
+
+    const currentQ = quizQuestions[currentQuizIndex];
+    return (
+      <div className="min-h-screen bg-slate-900 text-white flex flex-col items-center justify-center p-4">
+        <div className="max-w-2xl w-full bg-white/10 p-8 rounded-2xl border border-white/20 shadow-2xl">
+          <h2 className="text-sm font-bold text-blue-400 mb-2">Question {currentQuizIndex + 1} of {quizQuestions.length}</h2>
+          <h3 className="text-2xl font-bold mb-6 text-white">{currentQ.question}</h3>
+          <div className="space-y-4">
+            {currentQ.options.map((opt, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  if (opt === currentQ.answer) setQuizScore(s => s + 1);
+                  setCurrentQuizIndex(i => i + 1);
+                }}
+                className="w-full text-left p-4 rounded-xl border border-white/10 hover:bg-blue-500/20 hover:border-blue-400 transition-colors bg-slate-800/50 font-medium"
+              >
+                {opt}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -158,6 +226,16 @@ const InterviewPage = () => {
                 <li>✓ Highlight your impact</li>
               </ul>
             </div>
+          </div>
+
+          {/* Resume Upload Section */}
+          <div className="bg-white/5 border border-white/20 rounded-2xl p-8 text-center mt-8 shadow-xl">
+            <h3 className="text-2xl font-bold mb-4 text-white">Resume to Quiz</h3>
+            <p className="text-gray-300 mb-6">Upload your resume and our AI will automatically generate a custom quiz based on your skills and experience.</p>
+            <label className="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:from-purple-600 hover:to-indigo-600 text-white font-bold rounded-xl cursor-pointer transition-colors shadow-lg">
+              {uploading ? 'Analyzing Resume...' : 'Upload Resume & Generate Quiz'}
+              <input type="file" accept=".pdf,.doc,.docx,.txt" className="hidden" onChange={handleResumeUpload} disabled={uploading} />
+            </label>
           </div>
         </div>
       </div>

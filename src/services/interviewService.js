@@ -165,11 +165,44 @@ export const getPerformanceStats = async (userId) => {
   }
 };
 
+/**
+ * Generates a quiz based on an uploaded resume
+ */
+export const generateResumeQuiz = async (file, userId) => {
+  try {
+    // Simulating an API processing delay
+    await new Promise(resolve => setTimeout(resolve, 1500));
+    
+    // Return dummy quiz data directly
+    return [
+      {
+        question: "Based on the frontend technologies listed in your resume, what is a key advantage of using React?",
+        options: ["Virtual DOM for performance", "Built-in database", "It is a strictly typed language", "Replaces the need for CSS"],
+        answer: "Virtual DOM for performance"
+      },
+      {
+        question: "You mentioned experience with backend development. How does Node.js handle concurrency?",
+        options: ["Multi-threading", "Event Loop", "Parallel processing", "It doesn't handle concurrency"],
+        answer: "Event Loop"
+      },
+      {
+        question: "Regarding your cloud deployment experience, what does CI/CD stand for?",
+        options: ["Continuous Integration / Continuous Deployment", "Cloud Infrastructure / Cloud Deployment", "Code Inspection / Code Delivery", "Compute Instance / Core Data"],
+        answer: "Continuous Integration / Continuous Deployment"
+      }
+    ];
+  } catch (error) {
+    console.error('Error generating resume quiz:', error);
+    throw error;
+  }
+};
+
 export default {
   getInterviewQuestion,
   evaluateInterviewAnswer,
   startInterviewSession,
   saveInterviewFeedback,
   getInterviewHistory,
-  getPerformanceStats
+  getPerformanceStats,
+  generateResumeQuiz
 };

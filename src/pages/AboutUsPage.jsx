@@ -35,7 +35,7 @@ const AboutUsPage = () => {
             </div>
             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-3">Our Technology</h3>
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              Powered by the latest Gemini AI models, our system dynamically generates tailored questions, deeply analyzes your responses, and provides actionable insights just like a real senior engineering manager would.
+              Our intelligent interview platform dynamically generates tailored technical questions, analyzes your responses, and provides actionable insights just like a real senior engineering manager would.
             </p>
           </div>
         </div>

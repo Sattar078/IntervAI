@@ -23,7 +23,7 @@ const PrivacyPolicyPage = () => {
           
           <h3 className="text-xl font-bold mb-4">2. How We Use AI</h3>
           <p className="mb-6 text-slate-600 dark:text-slate-400 leading-relaxed">
-            We use third-party AI providers (such as Google Gemini) to process your interview questions and answers. Your data is sent to these providers securely via API strictly for the purpose of generating evaluation metrics. We do not use your private interview answers to train our own foundation models.
+            Our platform uses intelligent algorithms to process your interview questions and answers to generate evaluation metrics and personalized feedback. We process your data securely and do not use your private interview answers to train our own models.
           </p>
 
           <h3 className="text-xl font-bold mb-4">3. Data Security</h3>

@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { evaluateInterviewAnswer, getInterviewQuestion } from '../services/interviewService';
+import { generateQuestion, evaluateAnswer } from '../aiService';
 
 const InterviewComponent = ({ role = 'Software Developer', difficulty = 'mid', onComplete = null }) => {
   const { user } = useAuth();
@@ -17,6 +17,14 @@ const InterviewComponent = ({ role = 'Software Developer', difficulty = 'mid', o
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  // Map difficulty values
+  const mapDifficulty = (diff) => {
+    if (diff === 'easy') return 'Beginner';
+    if (diff === 'mid') return 'Intermediate';
+    if (diff === 'hard') return 'Advanced';
+    return 'Intermediate';
+  };
+
   // Load question on mount
   useEffect(() => {
     loadQuestion();
@@ -26,7 +34,8 @@ const InterviewComponent = ({ role = 'Software Developer', difficulty = 'mid', o
     try {
       setLoading(true);
       setError('');
-      const newQuestion = await getInterviewQuestion(role, difficulty);
+      const mappedDiff = mapDifficulty(difficulty);
+      const newQuestion = await generateQuestion(role, mappedDiff);
       setQuestion(newQuestion);
       setStage('question');
     } catch (err) {
@@ -48,7 +57,7 @@ const InterviewComponent = ({ role = 'Software Developer', difficulty = 'mid', o
       setError('');
       setStage('evaluating');
 
-      const result = await evaluateInterviewAnswer(question, answer, role);
+      const result = await evaluateAnswer(question, answer);
       setEvaluation(result);
       setStage('feedback');
     } catch (err) {

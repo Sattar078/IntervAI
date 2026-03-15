@@ -1,255 +1,157 @@
 /**
  * aiService.js
- * Core service module for interacting with the Google Gemini API.
- * Contains all prompt engineering and response parsing logic for the application.
+ * Dummy data service module to simulate AI interview functionality.
+ * Returns mock data to keep the application flow working.
  */
 
-// Define the URL for your local Express backend
-const BACKEND_URL = 'http://localhost:5000/api/interviews';
+// Dummy interview questions for different categories
+const dummyQuestions = {
+  'Frontend': [
+    { question: 'Explain the difference between var, let, and const in JavaScript.', difficulty: 'Beginner' },
+    { question: 'What is the Virtual DOM and how does React use it?', difficulty: 'Intermediate' },
+    { question: 'How does CSS Flexbox work?', difficulty: 'Beginner' },
+    { question: 'Explain closure in JavaScript with an example.', difficulty: 'Intermediate' },
+    { question: 'What are React hooks and why were they introduced?', difficulty: 'Intermediate' }
+  ],
+  'React': [
+    { question: 'What is the purpose of useEffect hook?', difficulty: 'Beginner' },
+    { question: 'Explain the difference between controlled and uncontrolled components.', difficulty: 'Intermediate' },
+    { question: 'How does React handle state updates?', difficulty: 'Intermediate' },
+    { question: 'What is the Context API and when should you use it?', difficulty: 'Intermediate' },
+    { question: 'Explain prop drilling and how to avoid it.', difficulty: 'Intermediate' }
+  ],
+  'Backend': [
+    { question: 'What are RESTful APIs and their principles?', difficulty: 'Beginner' },
+    { question: 'Explain the difference between SQL and NoSQL databases.', difficulty: 'Intermediate' },
+    { question: 'What is middleware in backend development?', difficulty: 'Beginner' },
+    { question: 'How does authentication and authorization work?', difficulty: 'Intermediate' },
+    { question: 'What is caching and why is it important?', difficulty: 'Intermediate' }
+  ],
+  'Behavioral': [
+    { question: 'Tell me about a time you had to work with a difficult team member.', difficulty: 'Beginner' },
+    { question: 'Describe a situation where you had to learn something new quickly.', difficulty: 'Beginner' },
+    { question: 'How do you handle failures and setbacks?', difficulty: 'Intermediate' },
+    { question: 'Tell us about your biggest achievement in a project.', difficulty: 'Beginner' },
+    { question: 'How do you prioritize tasks when everything seems urgent?', difficulty: 'Intermediate' }
+  ]
+};
 
-/**
- * A helper function to make API calls to Gemini.
- * This prevents us from having to rewrite the 'fetch' boilerplate in every single function below.
- * @param {string} prompt - The prompt to send to the AI.
- * @returns {Promise<string>} The AI's generated text content.
- */
-const callGeminiAPI = async (prompt) => {
-  try {
-    // Perform a standard POST request to the Google API endpoint
-    const response = await fetch(BACKEND_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      // Gemini's specific required payload structure
-      body: JSON.stringify({
-        contents: [{
-          parts: [{
-            // Inject the prompt text provided by the calling function
-            text: prompt
-          }]
-        }]
-      }),
-    });
-
-    // Check if the HTTP status code is anything other than 200 OK
-    if (!response.ok) {
-      const errorBody = await response.json();
-      console.error("API Error Response:", errorBody);
-      throw new Error(`API request failed with status ${response.status}. See console for details.`);
+// Dummy evaluations
+const generateDummyEvaluation = () => {
+  const scores = [6, 7, 8, 8, 9];
+  const evaluations = [
+    {
+      score: scores[Math.floor(Math.random() * scores.length)],
+      strengths: 'Clear explanation with good understanding of concepts',
+      weaknesses: 'Could provide more practical examples',
+      correctAnswer: 'The concept you mentioned is correct and well explained.',
+      improvements: ['Provide real-world examples', 'Discuss edge cases', 'Mention performance considerations'],
+      detailedReview: 'Good understanding of the fundamental concepts. Try to relate your answer to real-world scenarios for better clarity.'
+    },
+    {
+      score: 7,
+      strengths: 'Demonstrated practical knowledge',
+      weaknesses: 'Could go deeper into implementation details',
+      correctAnswer: 'Your understanding is on the right track.',
+      improvements: ['Discuss implementation approaches', 'Consider performance implications', 'Mention common pitfalls'],
+      detailedReview: 'You showed solid practical knowledge. Consider exploring edge cases and performance optimizations in your future answers.'
+    },
+    {
+      score: 8,
+      strengths: 'Comprehensive answer with good technical depth',
+      weaknesses: 'Could have mentioned additional considerations',
+      correctAnswer: 'Your answer covers the core concepts well.',
+      improvements: ['Mention scalability aspects', 'Discuss testing strategies', 'Add security considerations'],
+      detailedReview: 'Excellent response! You covered the main points thoroughly. For next time, consider discussing scalability and security implications.'
     }
-
-    // Parse the successful response body into a JavaScript object
-    const data = await response.json();
-    
-    // Safely access the deeply nested text content using optional chaining (?.)
-    // If any of these properties are missing, it safely falls back to undefined instead of crashing
-    const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    
-    if (!text) {
-      console.error("Invalid API response structure:", data);
-      throw new Error("Failed to parse a valid response from the AI.");
-    }
-
-    // Return the raw text string given by the AI
-    return text;
-
-  } catch (error) {
-    console.error("Error calling Gemini API:", error);
-    // Re-throw the error so that the React components (like Dashboard) can catch it and show an alert
-    throw error;
-  }
+  ];
+  return evaluations[Math.floor(Math.random() * evaluations.length)];
 };
 
 /**
- * Generates an interview question based on a category and difficulty.
- * @param {string} category - The interview category (e.g., 'React', 'Backend').
- * @param {string} difficulty - The difficulty level (e.g., 'Intermediate').
- * @returns {Promise<string>} A single interview question.
+ * Generates a single interview question based on category and difficulty.
+ * @param {string} category - The interview category
+ * @param {string} difficulty - The difficulty level
+ * @returns {Promise<string>} A mock interview question
  */
 export const generateQuestion = async (category, difficulty) => {
-  // Define the strict instructions for the AI model
-  const prompt = `
-    You are an expert interviewer. Generate one technical interview question for a candidate 
-    applying for a '${difficulty}' level '${category}' role.
-    The question should be concise, clear, and focused on a single concept.
-    Do not add any introductory text, conversational filler, or markdown formatting. 
-    Just provide the raw question text.
-  `;
-  // Pass the prompt to our helper and return the result
-  return callGeminiAPI(prompt);
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 300));
+  
+  const categoryKey = Object.keys(dummyQuestions).find(key => 
+    key.toLowerCase() === category.toLowerCase()
+  ) || 'Frontend';
+  
+  const questions = dummyQuestions[categoryKey];
+  const filteredQuestions = questions.filter(q => q.difficulty === difficulty);
+  
+  if (filteredQuestions.length === 0) {
+    return questions[Math.floor(Math.random() * questions.length)].question;
+  }
+  
+  return filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)].question;
 };
 
 /**
- * Evaluates a candidate's answer to a specific question.
- * @param {string} question - The interview question that was asked.
- * @param {string} answer - The candidate's answer.
- * @returns {Promise<object>} An evaluation object with score, review, strengths, and improvements.
+ * Evaluates a candidate's answer to a question.
+ * @param {string} question - The interview question
+ * @param {string} answer - The candidate's answer
+ * @returns {Promise<object>} Mock evaluation with score and feedback
  */
 export const evaluateAnswer = async (question, answer) => {
-  // Inject the specific question and user's answer into the prompt template
-  const prompt = `
-    You are an expert technical interviewer.
-
-    Evaluate the following answer.
-
-    Question:
-    "${question}"
-
-    Candidate Answer:
-    "${answer}"
-
-    // Strictly enforce a JSON response structure so our frontend can map it to variables smoothly
-    Return the evaluation strictly in the following JSON format. Do not include any other text, explanations, or markdown formatting. Keep feedback concise and helpful.
-
-    {
-      "score": <Score (0-10) as a number>,
-      "strengths": "<Strengths>",
-      "weaknesses": "<Weaknesses>",
-      "correctAnswer": "<Correct Answer>",
-      "improvementSuggestion": "<Improvement Suggestion>"
-    }
-  `;
-
-  const rawResponse = await callGeminiAPI(prompt);
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 500));
   
-  try {
-    // AI responses often wrap JSON in markdown blocks (e.g., ```json ... ```).
-    // This regex safely strips out the markdown backticks and 'json' text.
-    const cleanedResponse = rawResponse.replace(/```json\n?|```/g, '').trim();
-    // Convert the cleaned string into a usable JavaScript object
-    return JSON.parse(cleanedResponse);
-  } catch (error) {
-    console.error("Failed to parse JSON from AI response:", rawResponse);
-    throw new Error("The AI returned a response in an unexpected format.");
-  }
+  return generateDummyEvaluation();
 };
 
 /**
- * Generates a set of 5 interview questions for a session.
- * @param {string} category - The interview category (e.g., 'React').
- * @returns {Promise<Array<{question: string, difficulty: string}>>} An array of question objects.
+ * Generates an interview session with multiple questions.
+ * @param {string} category - The interview category
+ * @returns {Promise<Array>} Array of question objects with difficulty levels
  */
 export const generateInterviewSession = async (category) => {
-  const prompt = `
-    You are a technical interviewer.
-    Generate 5 interview questions for a candidate applying for a '${category}' developer role.
-    The difficulty should range from beginner to intermediate.
-    Return the response strictly in the following JSON format. Do not add any other text, explanations, or markdown formatting.
-
-    [
-      {
-        "question": "<The first question>",
-        "difficulty": "<'Beginner' or 'Intermediate'>"
-      },
-      {
-        "question": "<The second question>",
-        "difficulty": "<'Beginner' or 'Intermediate'>"
-      },
-      {
-        "question": "<The third question>",
-        "difficulty": "<'Beginger' or 'Intermediate'>"
-      },
-      {
-        "question": "<The fourth question>",
-        "difficulty": "<'Beginner' or 'Intermediate'>"
-      },
-      {
-        "question": "<The fifth question>",
-        "difficulty": "<'Beginner' or 'Intermediate'>"
-      }
-    ]
-  `;
-
-  const rawResponse = await callGeminiAPI(prompt);
-  try {
-    // Strip markdown formatting before attempting to parse the JSON array
-    const cleanedResponse = rawResponse.replace(/```json\n?|```/g, '').trim();
-    return JSON.parse(cleanedResponse);
-  } catch (error) {
-    console.error("Failed to parse JSON for session:", rawResponse);
-    throw new Error("The AI returned a session response in an unexpected format.");
-  }
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  const categoryKey = Object.keys(dummyQuestions).find(key => 
+    key.toLowerCase() === category.toLowerCase()
+  ) || 'Frontend';
+  
+  return dummyQuestions[categoryKey];
 };
 
 /**
- * Analyzes a candidate's overall performance based on all interview answers.
- * @param {Array<{question: string, answer: string}>} qnaList - List of questions and candidate's answers.
- * @returns {Promise<object>} Structured JSON with weak areas, suggested topics, and difficulty level.
+ * Analyzes candidate performance from all answers.
+ * @param {Array} qnaList - List of questions and answers
+ * @returns {Promise<object>} Mock performance analysis
  */
 export const generateFinalReport = async (qnaList) => {
-  // Convert the array of Q&A objects into a single readable text block using map and join
-  const answersText = qnaList.map((item, index) => `Q${index + 1}: ${item.question}\nAnswer: ${item.answer}`).join('\n\n');
-
-  const prompt = `
-    Analyze the following interview answers from a candidate.
-
-    Answers:
-    ${answersText}
-
-    Identify:
-    1. Top 3 weak technical areas
-    2. Suggested topics to learn
-    3. Difficulty level of candidate
-
-    Return strictly in the following JSON format. Do not include any other text, explanations, or markdown formatting.
-
-    {
-      "weakAreas": ["<Area 1>", "<Area 2>", "<Area 3>"],
-      "suggestedTopics": ["<Topic 1>", "<Topic 2>", "<Topic 3>"],
-      "candidateLevel": "<Beginner, Intermediate, or Advanced>"
-    }
-  `;
-
-  const rawResponse = await callGeminiAPI(prompt);
-  try {
-    const cleanedResponse = rawResponse.replace(/```json\n?|```/g, '').trim();
-    return JSON.parse(cleanedResponse);
-  } catch (error) {
-    console.error("Failed to parse JSON for final report:", rawResponse);
-    throw new Error("The AI returned a final report in an unexpected format.");
-  }
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 600));
+  
+  return {
+    weakAreas: ['Async/Await Patterns', 'System Design', 'Advanced Data Structures'],
+    suggestedTopics: ['Event Loop', 'Microservices Architecture', 'Algorithm Optimization'],
+    candidateLevel: 'Intermediate'
+  };
 };
 
 /**
- * Generates a set of 5 interview questions based on a candidate's resume.
- * @param {string} resumeText - The parsed text of the candidate's resume.
- * @returns {Promise<Array<{question: string, difficulty: string}>>} An array of question objects.
+ * Generates interview questions based on resume content.
+ * @param {string} resumeText - The candidate's resume text
+ * @returns {Promise<Array>} Array of question objects tailored to resume
  */
 export const generateQuestionsFromResume = async (resumeText) => {
-  const prompt = `
-    You are a technical recruiter.
-
-    Generate 5 interview questions based on this resume:
-
-    ${resumeText}
-
-    Focus on:
-    - skills mentioned
-    - projects
-    - technologies
-
-    Return strictly in the following JSON format. Do not add any other text, explanations, or markdown formatting.
-
-    [
-      {
-        "question": "<The first question>",
-        "difficulty": "<'Beginner', 'Intermediate', or 'Advanced'>"
-      },
-      // ... exactly 5 questions
-      {
-        "question": "<The fifth question>",
-        "difficulty": "<'Beginner', 'Intermediate', or 'Advanced'>"
-      }
-    ]
-  `;
-
-  const rawResponse = await callGeminiAPI(prompt);
-  try {
-    const cleanedResponse = rawResponse.replace(/```json\n?|```/g, '').trim();
-    return JSON.parse(cleanedResponse);
-  } catch (error) {
-    console.error("Failed to parse JSON for resume questions:", rawResponse);
-    throw new Error("The AI returned resume questions in an unexpected format.");
-  }
+  // Simulate async operation
+  await new Promise(resolve => setTimeout(resolve, 800));
+  
+  // Return a mix of frontend and backend questions since we don't know what's in resume
+  return [
+    { question: 'Can you walk us through a challenging project you mentioned in your resume?', difficulty: 'Intermediate' },
+    { question: 'What was your role in the team and what did you learn?', difficulty: 'Beginner' },
+    { question: 'How did you handle technical challenges in your previous projects?', difficulty: 'Intermediate' },
+    { question: 'What technologies have you worked with most extensively?', difficulty: 'Beginner' },
+    { question: 'Can you describe your most complex technical achievement?', difficulty: 'Advanced' }
+  ];
 };
