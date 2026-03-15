@@ -18,8 +18,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg}']
       },
       manifest: {
-        name: "AI Interview Platform",
-        short_name: "AIInterview",
+        name: "IntervAI",
+        short_name: "IntervAI",
         description: "AI powered mock interview platform",
         theme_color: "#000000",
         background_color: "#ffffff",

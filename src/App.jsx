@@ -125,7 +125,7 @@ const App = () => {
                 transition={{ delay: 0.6, duration: 0.6 }}
                 className="text-4xl font-extrabold text-white tracking-tight drop-shadow-lg"
               >
-                AIInterview
+                IntervAI
               </motion.h1>
             </motion.div>
           </motion.div>
@@ -145,7 +145,7 @@ const App = () => {
             <div className="w-8 h-8 bg-indigo-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">
               AI
             </div>
-            <span className="text-xl font-bold text-gray-900 tracking-tight">AIInterview</span>
+            <span className="text-xl font-bold text-gray-900 tracking-tight">IntervAI</span>
           </Link>
           {deferredPrompt && (
             <button
@@ -164,7 +164,7 @@ const App = () => {
           <div className="bg-white rounded-2xl p-8 shadow-2xl max-w-sm w-full text-center">
             <h3 className="text-2xl font-bold text-gray-900 mb-3">Install App</h3>
             <p className="text-gray-600 mb-6">
-              Install AI Interview Platform on your device for quick access and a better experience!
+              Install IntervAI on your device for quick access and a better experience!
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <button
